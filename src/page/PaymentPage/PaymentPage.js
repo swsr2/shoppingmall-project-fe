@@ -18,6 +18,7 @@ const PaymentPage = () => {
     name: "",
     number: "",
   });
+
   const navigate = useNavigate();
   const [firstLoading, setFirstLoading] = useState(true);
   const [shipInfo, setShipInfo] = useState({
@@ -28,22 +29,56 @@ const PaymentPage = () => {
     city: "",
     zip: "",
   });
-
+  const { cartList, totalPrice } = useSelector((state) => state.cart)
+  console.log("shipinfo", shipInfo)
   useEffect(() => {
     // 오더번호를 받으면 어디로 갈까?
+    // useEffect가 처음 호출될때 오더 성공 페이지로 넘어가는것을 막기 위해 
+    if (firstLoading) {
+      setFirstLoading(false)
+    } else {
+      if (orderNum !== "") {
+        navigate('/payment/success')
+      }
+    }
   }, [orderNum]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const { firstName, lastName, contact, address, city, zip } = shipInfo
     // 오더 생성하기
+    dispatch(createOrder({
+      totalPrice,
+      shipTo: { address, city, zip },
+      contact: { firstName, lastName, contact },
+      orderList: cartList.map((item) => {
+        return {
+          productId: item.productId._id,
+          price: item.productId.price,
+          qty: item.qty,
+          size: item.size,
+        }
+
+      })
+
+    }))
   };
 
   const handleFormChange = (event) => {
     //shipInfo에 값 넣어주기
+    const { name, value } = event.target
+    setShipInfo({ ...shipInfo, [name]: value })
   };
 
   const handlePaymentInfoChange = (event) => {
     //카드정보 넣어주기
+    const { name, value } = event.target
+    if (name === "expiry") {
+      let newValue = cc_expires_format(value)
+      setCardValue({ ...cardValue, [name]: newValue })
+      return
+    }
+    setCardValue({ ...cardValue, [name]: value })
   };
 
   const handleInputFocus = (e) => {
@@ -52,6 +87,9 @@ const PaymentPage = () => {
   // if (cartList?.length === 0) {
   //   navigate("/cart");
   // }// 주문할 아이템이 없다면 주문하기로 안넘어가게 막음
+  if (cartList.length === 0) {
+    navigate('/cart')
+  }
   return (
     <Container>
       <Row>
@@ -122,10 +160,11 @@ const PaymentPage = () => {
                   </Form.Group>
                 </Row>
                 <div className="mobile-receipt-area">
-                  {/* <OrderReceipt /> */}
+                  <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
                 </div>
                 <div>
                   <h2 className="payment-title">결제 정보</h2>
+                  <PaymentForm cardValue={cardValue} handleInputFocus={handleInputFocus} handlePaymentInfoChange={handlePaymentInfoChange} />
                 </div>
 
                 <Button
@@ -140,7 +179,7 @@ const PaymentPage = () => {
           </div>
         </Col>
         <Col lg={5} className="receipt-area">
-          {/* <OrderReceipt  /> */}
+          <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
         </Col>
       </Row>
     </Container>

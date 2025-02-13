@@ -21,13 +21,15 @@ const Login = () => {
       dispatch(clearErrors());
     }
   }, [navigate]);
-  const handleLoginWithEmail = (event) => {
+  const handleLoginWithEmail = async (event) => {
     event.preventDefault();
     dispatch(loginWithEmail({ email, password }));
+
   };
 
   const handleGoogleLogin = async (googleData) => {
     //구글 로그인 하기
+    dispatch(loginWithGoogle(googleData.credential))
   };
 
   if (user) {
@@ -73,6 +75,12 @@ const Login = () => {
           <div className="text-align-center mt-2">
             <p>-외부 계정으로 로그인하기-</p>
             <div className="display-center">
+              {/* 1. 구글로그인버튼 가져오기
+              2. 0auth api 가입/클라이언트키,시크릿키 받기
+              3. 로그인
+              4. 백엔드에서 로그인하기
+              5. 이미 로그인했으면 로그인시키고 토큰 줌
+              6. 로그인 처음이면 유저정보 생성 후 토큰 줌 */}
               <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
                 <GoogleLogin
                   onSuccess={handleGoogleLogin}

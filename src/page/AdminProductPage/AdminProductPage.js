@@ -37,27 +37,48 @@ const AdminProductPage = () => {
   ];
 
   //상품리스트 가져오기 (url쿼리 맞춰서)
+  useEffect(() => {
+    dispatch(getProductList({ ...searchQuery }))
+  }, [query])
 
   useEffect(() => {
     //검색어나 페이지가 바뀌면 url바꿔주기 (검색어또는 페이지가 바뀜 => url 바꿔줌=> url쿼리 읽어옴=> 이 쿼리값 맞춰서  상품리스트 가져오기)
+    //1. url 바꾸기
+    if (searchQuery.name === "") {
+      delete searchQuery.name
+    }
+    const params = new URLSearchParams(searchQuery)
+    const queryString = params.toString()
+    // console.log("qqq", query)
+    navigate('?' + queryString)
+    //2. url 쿼리 읽어오기 -> getProductList로 보내줌줌
+
   }, [searchQuery]);
 
   const deleteItem = (id) => {
-    //아이템 삭제하가ㅣ
+    //아이템 삭제하기 
+    dispatch(deleteProduct(id))
   };
 
   const openEditForm = (product) => {
     //edit모드로 설정하고
+    setMode("edit")
+    // 선택한 아이템을 저장하기 - 리듀서 저장
+    dispatch(setSelectedProduct(product))
     // 아이템 수정다이얼로그 열어주기
+    setShowDialog(true)
   };
 
   const handleClickNewItem = () => {
     //new 모드로 설정하고
+    setMode("new")
     // 다이얼로그 열어주기
+    setShowDialog(true)
   };
 
   const handlePageClick = ({ selected }) => {
     //  쿼리에 페이지값 바꿔주기
+    setSearchQuery({ ...searchQuery, page: selected + 1 })
   };
 
   return (
@@ -77,7 +98,7 @@ const AdminProductPage = () => {
 
         <ProductTable
           header={tableHeader}
-          data=""
+          data={productList}
           deleteItem={deleteItem}
           openEditForm={openEditForm}
         />
@@ -85,7 +106,7 @@ const AdminProductPage = () => {
           nextLabel="next >"
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
-          pageCount={100}
+          pageCount={totalPageNum} // 전체페이지
           forcePage={searchQuery.page - 1}
           previousLabel="< previous"
           renderOnZeroPageCount={null}

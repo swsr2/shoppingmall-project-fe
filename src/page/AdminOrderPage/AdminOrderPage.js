@@ -69,7 +69,7 @@ const AdminOrderPage = () => {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             placeholder="오더번호"
-            field="ordernum"
+            field="orderNum"
           />
         </div>
 

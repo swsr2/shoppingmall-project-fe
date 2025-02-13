@@ -9,11 +9,10 @@ import { getOrder } from "../../features/order/orderSlice";
 const MyPage = () => {
   const dispatch = useDispatch();
   const { orderList } = useSelector((state) => state.order);
-  console.log(orderList);
+  console.log("orderList", orderList);
   useEffect(() => {
     dispatch(getOrder());
   }, [dispatch]);
-
   if (orderList?.length === 0) {
     return (
       <Container className="no-order-box">
