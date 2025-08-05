@@ -9,7 +9,7 @@ export const getProductList = createAsyncThunk(
     // 검색시 query 사용 
     try {
       const response = await api.get('/product', { params: { ...query } })
-      console.log("뭐냐", response)
+      // console.log("뭐냐", response)
     
       return response.data
     } catch (error) {
@@ -23,7 +23,7 @@ export const getProductDetail = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await api.get(`/product/${id}`)
-      console.log("과연", response)
+      // console.log("과연", response)
 
       return response.data
     } catch (error) {

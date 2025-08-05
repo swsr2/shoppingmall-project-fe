@@ -39,6 +39,7 @@ const Navbar = ({ user }) => {
     } else {
       navigate(`/?mainCategory=${category.toLowerCase()}`);
     }
+    setWidth(0); // <-- 이 줄을 추가합니다.
   };
 
   return (
