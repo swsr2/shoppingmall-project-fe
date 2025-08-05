@@ -93,6 +93,7 @@ body{
 .card{
   border:none !important;
   margin-bottom: 10px;
+  background-color: #FAF9F8;
 }
 
 .choice{

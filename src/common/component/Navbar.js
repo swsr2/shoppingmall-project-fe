@@ -11,22 +11,14 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/user/userSlice";
+import { MAIN_CATEGORY } from "../../constants/product.constants";
 
 const Navbar = ({ user }) => {
   const dispatch = useDispatch();
   const { cartItemCount } = useSelector((state) => state.cart);
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const [showSearchBox, setShowSearchBox] = useState(false);
-  const menuList = [
-    "여성",
-    "Divided",
-    "남성",
-    "신생아/유아",
-    "아동",
-    "H&M HOME",
-    "Sale",
-    "지속가능성",
-  ];
+  const menuList = MAIN_CATEGORY;
   let [width, setWidth] = useState(0);
   let navigate = useNavigate();
   const onCheckEnter = (event) => {
@@ -39,6 +31,14 @@ const Navbar = ({ user }) => {
   };
   const handleLogout = () => {
     dispatch(logout());
+  };
+  const searchByCategory = (event) => {
+    const category = event.target.textContent;
+    if (category === "SALE") {
+      navigate("/?mainCategory=sale");
+    } else {
+      navigate(`/?mainCategory=${category.toLowerCase()}`);
+    }
   };
 
   return (
@@ -70,7 +70,9 @@ const Navbar = ({ user }) => {
 
         <div className="side-menu-list" id="menu-list">
           {menuList.map((menu, index) => (
-            <button key={index}>{menu}</button>
+            <button key={index} onClick={searchByCategory}>
+              {menu}
+            </button>
           ))}
         </div>
       </div>
@@ -102,8 +104,9 @@ const Navbar = ({ user }) => {
             <div onClick={() => navigate("/cart")} className="nav-icon">
               <FontAwesomeIcon icon={faShoppingBag} />
               {!isMobile && (
-                <span style={{ cursor: "pointer" }}>{`쇼핑백(${cartItemCount || 0
-                  })`}</span>
+                <span style={{ cursor: "pointer" }}>{`쇼핑백(${
+                  cartItemCount || 0
+                })`}</span>
               )}
             </div>
             <div
@@ -130,8 +133,8 @@ const Navbar = ({ user }) => {
       <div className="nav-menu-area">
         <ul className="menu">
           {menuList.map((menu, index) => (
-            <li key={index}>
-              <a href="#">{menu}</a>
+            <li key={index} onClick={searchByCategory}>
+              <a>{menu}</a>
             </li>
           ))}
         </ul>

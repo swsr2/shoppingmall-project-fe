@@ -66,12 +66,15 @@ export const registerUser = createAsyncThunk(
 export const loginWithToken = createAsyncThunk(
   "user/loginWithToken",
   async (_, { rejectWithValue }) => {
-    // api에서 헤더에 붙여버렸기 때문에 다시 저장x 요청만 하면됨
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      return rejectWithValue("Token not found in session storage");
+    }
     try {
-      const response = await api.get("/user/me")
-      return response.data
+      const response = await api.get("/user/me");
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.error)
+      return rejectWithValue(error.error);
     }
   }
 );

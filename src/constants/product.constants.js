@@ -12,6 +12,7 @@ export const PRODUCT_EDIT_REQUEST = "PRODUCT_EDIT_REQUEST";
 export const PRODUCT_EDIT_SUCCESS = "PRODUCT_EDIT_SUCCESS";
 export const PRODUCT_EDIT_FAIL = "PRODUCT_EDIT_FAIL";
 export const SET_FILTERED_LIST = "SET_FILTERED_LIST";
+export const MAIN_CATEGORY = ["WOMEN", "MEN", "BABY", "KIDS", "HOME", "SALE"];
 export const CATEGORY = ["Top", "Dress", "Pants"];
 export const STATUS = ["active", "disactive"];
 export const SIZE = ["XS", "S", "M", "L", "XL"];

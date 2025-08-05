@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Form, Modal, Button, Row, Col, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import CloudinaryUploadWidget from "../../../utils/CloudinaryUploadWidget";
-import { CATEGORY, STATUS, SIZE } from "../../../constants/product.constants";
+import {
+  CATEGORY,
+  STATUS,
+  SIZE,
+  MAIN_CATEGORY,
+} from "../../../constants/product.constants";
 import "../style/adminProduct.style.css";
 import {
   clearError,
@@ -16,6 +21,7 @@ const InitialFormData = {
   stock: {},
   image: "",
   description: "",
+  mainCategory: "",
   category: [],
   status: "active",
   price: 0,
@@ -66,51 +72,54 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     // console.log(formData)
     // console.log(stock)
     //재고를 입력했는지 확인, 아니면 에러
-    if (stock.length === 0) return setStockError(true)
+    if (stock.length === 0) return setStockError(true);
     // 재고를 배열에서 객체로 바꿔주기
     // [['M',2]] 에서 {M:2}로
     const totalStock = stock.reduce((total, item) => {
-      return { ...total, [item[0]]: parseInt(item[1]) }
-    }, {})
+      return { ...total, [item[0]]: parseInt(item[1]) };
+    }, {});
     // console.log(totalStock)
+    console.log("Form Data before dispatch:", formData);
     if (mode === "new") {
       //새 상품 만들기
-      dispatch(createProduct({ ...formData, stock: totalStock }))
+      dispatch(createProduct({ ...formData, stock: totalStock }));
     } else {
       // 상품 수정하기
-      dispatch(editProduct({ ...formData, stock: totalStock, id: selectedProduct._id }))
+      dispatch(
+        editProduct({ ...formData, stock: totalStock, id: selectedProduct._id })
+      );
     }
   };
 
   const handleChange = (event) => {
     //form에 데이터 넣어주기
-    const { id, value } = event.target
-    setFormData({ ...formData, [id]: value })
+    const { id, value } = event.target;
+    setFormData({ ...formData, [id]: value });
   };
 
   const addStock = () => {
     //재고타입 추가시 배열에 새 배열 추가
-    setStock([...stock, []])
+    setStock([...stock, []]);
   };
 
   const deleteStock = (idx) => {
     //재고 삭제하기
-    const newStock = stock.filter((item, index) => index !== idx)
-    setStock(newStock)
+    const newStock = stock.filter((item, index) => index !== idx);
+    setStock(newStock);
   };
 
   const handleSizeChange = (value, index) => {
     //  재고 사이즈 변환하기
-    const newStock = [...stock]
-    newStock[index][0] = value
-    setStock(newStock)
+    const newStock = [...stock];
+    newStock[index][0] = value;
+    setStock(newStock);
   };
 
   const handleStockChange = (value, index) => {
     //재고 수량 변환하기
-    const newStock = [...stock]
-    newStock[index][1] = value
-    setStock(newStock)
+    const newStock = [...stock];
+    newStock[index][1] = value;
+    setStock(newStock);
   };
 
   const onHandleCategory = (event) => {
@@ -124,7 +133,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
         category: [...newCategory],
       });
     } else {
-      // 새로추가 
+      // 새로추가
       setFormData({
         ...formData,
         category: [...formData.category, event.target.value],
@@ -134,7 +143,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const uploadImage = (url) => {
     //이미지 업로드
-    setFormData({ ...formData, image: url })
+    setFormData({ ...formData, image: url });
   };
 
   return (
@@ -272,6 +281,25 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
               type="number"
               placeholder="0"
             />
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="mainCategory">
+            <Form.Label>Main Category</Form.Label>
+            <Form.Control
+              as="select"
+              onChange={handleChange}
+              value={formData.mainCategory}
+              required
+            >
+              <option value="" disabled selected hidden>
+                Please Choose...
+              </option>
+              {MAIN_CATEGORY.map((item, idx) => (
+                <option key={idx} value={item.toLowerCase()}>
+                  {item}
+                </option>
+              ))}
+            </Form.Control>
           </Form.Group>
 
           <Form.Group as={Col} controlId="category">
