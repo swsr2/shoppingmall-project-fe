@@ -62,7 +62,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   }, [showDialog]);
 
   const handleClose = () => {
-
+    setShowDialog(false);
   };
 
   const handleSubmit = (event) => {

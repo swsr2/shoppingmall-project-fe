@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Container, Row, Col, Button, Dropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { ColorRing } from "react-loader-spinner";
-import { currencyFormat } from "../../utils/number";
+import { currencyFormat, applyDiscount } from "../../utils/number";
 import "./style/productDetail.style.css";
 import { getProductDetail } from "../../features/product/productSlice";
 import { addToCart } from "../../features/cart/cartSlice";
@@ -56,9 +56,21 @@ const ProductDetail = () => {
         </Col>
         <Col className="product-info-area" sm={6}>
           <div className="product-info">{selectedProduct.name}</div>
-          <div className="product-info">
-            ₩ {currencyFormat(selectedProduct.price)}
-          </div>
+          {selectedProduct?.mainCategory === "sale" ? (
+            <div>
+              <span style={{ textDecoration: "line-through" }}>
+                ₩ {currencyFormat(selectedProduct?.price)}
+              </span>
+              <br />
+              <span style={{ color: "red" }}>
+                ₩ {currencyFormat(applyDiscount(selectedProduct?.price, selectedProduct?.mainCategory))}
+              </span>
+            </div>
+          ) : (
+            <div className="product-info">
+                ₩ {currencyFormat(selectedProduct.price)}
+            </div>
+          )}
           <div className="product-info">{selectedProduct.description}</div>
 
           <Dropdown

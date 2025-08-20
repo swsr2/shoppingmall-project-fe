@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
-import { currencyFormat } from "../../../utils/number";
+import { currencyFormat, applyDiscount } from "../../../utils/number";
 
 const OrderReceipt = ({ cartList, totalPrice }) => {
   const location = useLocation();
@@ -12,14 +12,35 @@ const OrderReceipt = ({ cartList, totalPrice }) => {
     <div className="receipt-container">
       <h3 className="receipt-title">주문 내역</h3>
       <ul className="receipt-list">
-        {cartList.length > 0 && cartList.map((item, index) => (
-          <li key={index}>
-            <div className="display-flex space-between">
-              <div>{item.productId.name}</div>
-
-              <div>₩ {currencyFormat(item.productId.price * item.qty)}</div>
-            </div>
-          </li>))}
+        {cartList.length > 0 &&
+          cartList.map((item, index) => {
+            const discountedPrice = applyDiscount(
+              item.productId.price,
+              item.productId.mainCategory
+            );
+            return (
+              <li key={index}>
+                <div className="display-flex space-between">
+                  <div>{item.productId.name}</div>
+                  <div>
+                    {item.productId.mainCategory === "sale" ? (
+                      <>
+                        <span style={{ textDecoration: "line-through" }}>
+                          ₩ {currencyFormat(item.productId.price * item.qty)}
+                        </span>
+                        <br />
+                        <strong style={{ color: "red" }}>
+                          ₩ {currencyFormat(discountedPrice * item.qty)}
+                        </strong>
+                      </>
+                    ) : (
+                      `₩ ${currencyFormat(item.productId.price * item.qty)}`
+                    )}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
       </ul>
       <div className="display-flex space-between receipt-title">
         <div>
