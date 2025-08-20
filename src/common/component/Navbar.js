@@ -16,7 +16,6 @@ import { MAIN_CATEGORY } from "../../constants/product.constants";
 const Navbar = ({ user }) => {
   const dispatch = useDispatch();
   const { cartItemCount } = useSelector((state) => state.cart);
-  const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const [showSearchBox, setShowSearchBox] = useState(false);
   const menuList = MAIN_CATEGORY;
   let [width, setWidth] = useState(0);
@@ -92,36 +91,33 @@ const Navbar = ({ user }) => {
             {user ? (
               <div onClick={handleLogout} className="nav-icon">
                 <FontAwesomeIcon icon={faUser} />
-                {!isMobile && (
-                  <span style={{ cursor: "pointer" }}>로그아웃</span>
-                )}
+                <span style={{ cursor: "pointer" }}>로그아웃</span>
               </div>
             ) : (
               <div onClick={() => navigate("/login")} className="nav-icon">
                 <FontAwesomeIcon icon={faUser} />
-                {!isMobile && <span style={{ cursor: "pointer" }}>로그인</span>}
+                <span style={{ cursor: "pointer" }}>로그인</span>
               </div>
             )}
             <div onClick={() => navigate("/cart")} className="nav-icon">
               <FontAwesomeIcon icon={faShoppingBag} />
-              {!isMobile && (
-                <span style={{ cursor: "pointer" }}>{`쇼핑백(${
-                  cartItemCount || 0
-                })`}</span>
-              )}
+              <span style={{ cursor: "pointer" }}>{`쇼핑백(${
+                cartItemCount || 0
+              })`}</span>
             </div>
             <div
               onClick={() => navigate("/account/purchase")}
               className="nav-icon"
             >
               <FontAwesomeIcon icon={faBox} />
-              {!isMobile && <span style={{ cursor: "pointer" }}>내 주문</span>}
+              <span style={{ cursor: "pointer" }}>내 주문</span>
             </div>
-            {isMobile && (
-              <div className="nav-icon" onClick={() => setShowSearchBox(true)}>
-                <FontAwesomeIcon icon={faSearch} />
-              </div>
-            )}
+            <div
+              className="nav-icon mobile-search-icon"
+              onClick={() => setShowSearchBox(true)}
+            >
+              <FontAwesomeIcon icon={faSearch} />
+            </div>
           </div>
         </div>
       </div>
@@ -139,16 +135,14 @@ const Navbar = ({ user }) => {
             </li>
           ))}
         </ul>
-        {!isMobile && ( 
-          <div className="search-box landing-search-box ">
-            <FontAwesomeIcon icon={faSearch} />
-            <input
-              type="text"
-              placeholder="제품검색"
-              onKeyPress={onCheckEnter}
-            />
-          </div>
-        )}
+        <div className="search-box landing-search-box ">
+          <FontAwesomeIcon icon={faSearch} />
+          <input
+            type="text"
+            placeholder="제품검색"
+            onKeyPress={onCheckEnter}
+          />
+        </div>
       </div>
     </div>
   );

@@ -41,6 +41,9 @@ body{
 .burger-menu{
   margin-left: 20px;
 }
+.mobile-search-icon{
+  display: none;
+}
 
 .landing-search-box{
   right: 20px;
@@ -230,6 +233,15 @@ body{
     visibility:visible;
   }
   .menu {
+    display: none;
+  }
+  .nav-icon span {
+    display: none;
+  }
+  .mobile-search-icon {
+    display: block;
+  }
+  .landing-search-box {
     display: none;
   }
  
