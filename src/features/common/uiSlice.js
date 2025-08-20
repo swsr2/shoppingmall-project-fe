@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   toastMessage: { message: "", status: "" },
-  // 'success', 'error', 'warning'
 };
 
 const uiSlice = createSlice({

@@ -11,13 +11,12 @@ const initialState = {
   totalPrice: 0,
 };
 
-// Async thunk actions
+
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ id, size }, { rejectWithValue, dispatch }) => {
     try {
       const response = await api.post(`/cart`, { productId: id, size, qty: 1 })
-
       dispatch(showToastMessage({ message: "카트에 아이템이 추가되었습니다.", status: "success" }))
       return response.data.cartItemQty
     } catch (error) {
@@ -32,7 +31,6 @@ export const getCartList = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const response = await api.get('/cart')
-
       return response.data.data
     } catch (error) {
       return rejectWithValue(error.error)
@@ -45,7 +43,6 @@ export const deleteCartItem = createAsyncThunk(
   async (id, { rejectWithValue, dispatch }) => {
     try {
       const response = await api.delete(`/cart/${id}`)
-    
       dispatch(showToastMessage({ message: "카트에 아이템이 삭제되었습니다.", status: "success" }))
       dispatch(getCartList())
     } catch (error) {
@@ -59,7 +56,6 @@ export const updateQty = createAsyncThunk(
   async ({ id, value }, { rejectWithValue }) => {
     try {
       const response = await api.put(`/cart/${id}`, { qty: value })
-    
       return response.data.data
     } catch (error) {
       return rejectWithValue(error.error)
@@ -72,7 +68,6 @@ export const getCartQty = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const response = await api.get('/cart/qty')
-      
       return response.data.qty
     } catch (error) {
       dispatch(rejectWithValue(error.error));
@@ -87,7 +82,6 @@ const cartSlice = createSlice({
     initialCart: (state) => {
       state.cartItemCount = 0;
     },
-    // You can still add reducers here for non-async actions if necessary
   },
   extraReducers: (builder) => {
     builder.addCase(addToCart.pending, (state, action) => {

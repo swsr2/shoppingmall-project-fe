@@ -2,18 +2,15 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../utils/api";
 import { showToastMessage } from "../common/uiSlice";
 
-// 비동기 액션 생성
+
 export const getProductList = createAsyncThunk(
   "products/getProductList",
-      async (query, { rejectWithValue }) => {
-    // 검색시 query 사용 
+  async (query, { rejectWithValue }) => {
     try {
-      const response = await api.get('/product', { params: { ...query } })
-      // console.log("뭐냐", response)
-    
-      return response.data
+      const response = await api.get("/product", { params: { ...query } });
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.error)
+      return rejectWithValue(error.error);
     }
   }
 );
@@ -22,12 +19,10 @@ export const getProductDetail = createAsyncThunk(
   "products/getProductDetail",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/product/${id}`)
-      // console.log("과연", response)
-
-      return response.data
+      const response = await api.get(`/product/${id}`);
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.error)
+      return rejectWithValue(error.error);
     }
   }
 );
@@ -36,13 +31,17 @@ export const createProduct = createAsyncThunk(
   "products/createProduct",
   async (formData, { dispatch, rejectWithValue }) => {
     try {
-      const response = await api.post('/product', formData)
-
-      dispatch(showToastMessage({ message: "상품 생성 완료", status: "success" }))
-      dispatch(getProductList({ page: 1 }))
-      return response.data.data
+      const response = await api.post("/product", formData);
+      if (response.status !== 200) {
+        throw new Error(response.error);
+      }
+      dispatch(
+        showToastMessage({ message: "상품 생성 완료", status: "success" })
+      );
+      dispatch(getProductList({ page: 1 }));
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.error)
+      return rejectWithValue(error.error);
     }
   }
 );
@@ -51,12 +50,13 @@ export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
   async (id, { dispatch, rejectWithValue }) => {
     try {
-      const response = await api.delete(`/product/${id}`)
-
-      dispatch(showToastMessage({ message: "상품 삭제 완료", status: "success" }))
-      dispatch(getProductList({ page: 1 }))
+      const response = await api.delete(`/product/${id}`);
+      dispatch(
+        showToastMessage({ message: "상품 삭제 완료", status: "success" })
+      );
+      dispatch(getProductList({ page: 1 }));
     } catch (error) {
-      return rejectWithValue(error.error)
+      return rejectWithValue(error.error);
     }
   }
 );
@@ -65,18 +65,15 @@ export const editProduct = createAsyncThunk(
   "products/editProduct",
   async ({ id, ...formData }, { dispatch, rejectWithValue }) => {
     try {
-      const response = await api.put(`/product/${id}`, formData)
-
-      // 수정후 바뀐 정보 가져오기  
-      dispatch(getProductList({ page: 1 }))
-      return response.data.data
+      const response = await api.put(`/product/${id}`, formData);
+      dispatch(getProductList({ page: 1 }));
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.error)
+      return rejectWithValue(error.error);
     }
   }
 );
 
-// 슬라이스 생성
 const productSlice = createSlice({
   name: "products",
   initialState: {
@@ -100,56 +97,61 @@ const productSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(createProduct.pending, (state) => { state.loading = true })
+    builder
+      .addCase(createProduct.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(createProduct.fulfilled, (state) => {
-        state.loading = false
-        state.error = ""
-        state.success = true
+        state.loading = false;
+        state.error = "";
+        state.success = true;
       })
       .addCase(createProduct.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
-        state.success = false // 실패시 창 안닫히고 메세지보여줌
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
       })
-      .addCase(getProductList.pending, (state) => { state.loading = true })
+      .addCase(getProductList.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(getProductList.fulfilled, (state, action) => {
-        state.loading = false
-        state.productList = action.payload.data
-        state.error = ""
-        state.totalPageNum = action.payload.totalPageNum
+        state.loading = false;
+        state.productList = action.payload.data;
+        state.error = "";
+        state.totalPageNum = action.payload.totalPageNum;
       })
       .addCase(getProductList.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
+        state.loading = false;
+        state.error = action.payload;
       })
       .addCase(editProduct.pending, (state, action) => {
-        state.loading = true
+        state.loading = true;
       })
       .addCase(editProduct.fulfilled, (state, action) => {
-        state.loading = false
-        state.error = ""
-        state.success = true
+        state.loading = false;
+        state.error = "";
+        state.success = true;
       })
       .addCase(editProduct.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
-        state.success = false
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
       })
       .addCase(getProductDetail.pending, (state) => {
-        state.loading = true
-        state.selectedProduct = null // 기존 데이터 초기화
+        state.loading = true;
+        state.selectedProduct = null; 
       })
       .addCase(getProductDetail.fulfilled, (state, action) => {
-        state.loading = false
-        state.error = ""
-        state.success = true
-        state.selectedProduct = action.payload.data // 상세 정보 저장
+        state.loading = false;
+        state.error = "";
+        state.success = true;
+        state.selectedProduct = action.payload.data;
       })
       .addCase(getProductDetail.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
-        state.success = false
-        state.selectedProduct = null
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+        state.selectedProduct = null;
       });
   },
 });

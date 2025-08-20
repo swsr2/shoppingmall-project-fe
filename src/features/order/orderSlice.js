@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getCartQty } from "../cart/cartSlice";
 import api from "../../utils/api";
 import { showToastMessage } from "../common/uiSlice";
-import { a } from "@react-spring/web";
 
-// Define initial state
+
+
 const initialState = {
   orderList: [],
   orderNum: "",
@@ -14,7 +14,7 @@ const initialState = {
   totalPageNum: 1,
 };
 
-// Async thunks
+
 export const createOrder = createAsyncThunk(
   "order/createOrder",
   async (payload, { dispatch, rejectWithValue }) => {
@@ -62,7 +62,6 @@ export const updateOrder = createAsyncThunk(
   async ({ id, status }, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.put(`/order/${id}`, { status })
-
       dispatch(getOrderList())
     } catch (error) {
       return rejectWithValue(error.error)
@@ -70,7 +69,7 @@ export const updateOrder = createAsyncThunk(
   }
 );
 
-// Order slice
+
 const orderSlice = createSlice({
   name: "order",
   initialState,
@@ -100,7 +99,7 @@ const orderSlice = createSlice({
         state.orderList = action.payload.orderList
         state.totalPageNum = action.payload.totalPageNum
         state.error = ""
-        // state.totalPageNum = action.payload
+    
       })
       .addCase(getOrder.rejected, (state, action) => {
         state.loading = false

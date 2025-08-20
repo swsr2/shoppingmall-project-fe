@@ -39,7 +39,7 @@ const Navbar = ({ user }) => {
     } else {
       navigate(`/?mainCategory=${category.toLowerCase()}`);
     }
-    setWidth(0); // <-- 이 줄을 추가합니다.
+    setWidth(0);
   };
 
   return (
@@ -139,7 +139,7 @@ const Navbar = ({ user }) => {
             </li>
           ))}
         </ul>
-        {!isMobile && ( // admin페이지에서 같은 search-box스타일을 쓰고있음 그래서 여기서 서치박스 안보이는것 처리를 해줌
+        {!isMobile && ( 
           <div className="search-box landing-search-box ">
             <FontAwesomeIcon icon={faSearch} />
             <input

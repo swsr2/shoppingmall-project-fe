@@ -65,13 +65,11 @@ const PaymentPage = () => {
   };
 
   const handleFormChange = (event) => {
-    //shipInfo에 값 넣어주기
     const { name, value } = event.target
     setShipInfo({ ...shipInfo, [name]: value })
   };
 
   const handlePaymentInfoChange = (event) => {
-    //카드정보 넣어주기
     const { name, value } = event.target
     if (name === "expiry") {
       let newValue = cc_expires_format(value)
@@ -84,9 +82,6 @@ const PaymentPage = () => {
   const handleInputFocus = (e) => {
     setCardValue({ ...cardValue, focus: e.target.name });
   };
-  // if (cartList?.length === 0) {
-  //   navigate("/cart");
-  // }// 주문할 아이템이 없다면 주문하기로 안넘어가게 막음
   if (cartList.length === 0) {
     navigate('/cart')
   }
